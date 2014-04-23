@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="alphalabs_pagination.paginated_collection_request.factory.default.class">AlphaLabs\Pagination\Factory\DefaultPaginatedCollectionRequestFactory</parameter>
+        <parameter key="alphalabs_pagination.paginated_collection_request.factory.request_based.class">AlphaLabs\Pagination\Factory\RequestBasedPaginatedCollectionRequestFactory</parameter>
+        <parameter key="alphalabs_pagination.paginated_collection_request.factory.chained.class">AlphaLabs\Pagination\Factory\ChainedPaginatedCollectionRequestFactory</parameter>
+        <parameter key="alphalabs_pagination.paginated_collection_request.provider.class">AlphaLabs\Pagination\Provider\PaginatedCollectionRequestProvider</parameter>
+        <parameter key="alphalabs_pagination.paginated_collection_request.converter.class">AlphaLabs\Bundle\PaginationBundle\ParamConverter\PaginatedCollectionRequestConverter</parameter>
+    </parameters>
+
+    <services>
+        <service id="alphalabs_pagination.paginated_collection_request.factory.default"
+                 class="%alphalabs_pagination.paginated_collection_request.factory.default.class%">
+            <tag name="alphalabs_pagination.factory" priority="1" />
+        </service>
+
+        <service id="alphalabs_pagination.paginated_collection_request.factory.request_based"
+                 class="%alphalabs_pagination.paginated_collection_request.factory.request_based.class%">
+            <argument type="service" id="request_stack" />
+            <argument /><!-- itemsPerPageKey -->
+            <argument /><!-- pageKey -->
+            <tag name="alphalabs_pagination.factory" priority="10" />
+        </service>
+
+        <service id="alphalabs_pagination.paginated_collection_request.factory.chained"
+                 class="%alphalabs_pagination.paginated_collection_request.factory.chained.class%" />
+
+        <service id="alphalabs_pagination.paginated_collection_request.provider"
+                 class="%alphalabs_pagination.paginated_collection_request.provider.class%">
+            <argument type="service" id="alphalabs_pagination.paginated_collection_request.factory.chained" />
+            <argument>%alphalabs_pagination.default_items_per_page%</argument>
+        </service>
+
+        <service id="alphalabs_pagination.paginated_collection_request.converter"
+                 class="%alphalabs_pagination.paginated_collection_request.converter.class%">
+            <call method="setPaginatedCollectionRequestProvider">
+                <argument type="service" id="alphalabs_pagination.paginated_collection_request.provider" />
+            </call>
+            <tag name="request.param_converter" priority="10" converter="paginated_collection_request" />
+        </service>
+    </services>
+</container>
