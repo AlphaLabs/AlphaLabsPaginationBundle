@@ -14,7 +14,7 @@
         "php": ">=5.4",
         "symfony/symfony": "~2.4",
         "sensio/framework-extra-bundle": "~3.0",
-        "alphalabs/pagination": "1.0.*@dev"
+        "alphalabs/pagination": "~1.0"
     },
     "minimum-stability": "stable",
     "autoload": {
